@@ -36,6 +36,9 @@ type props = {
   tablenames: string[];
 };
 
+//Form is for creating a entity (new table)
+
+
 export function CreateEntityForm({ tablenames }: props) {
   const { toast } = useToast();
   const [CardOpen, setCardOpen] = useState<boolean>(true);

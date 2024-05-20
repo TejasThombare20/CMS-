@@ -38,6 +38,10 @@
     attributes: Record<string, any>;
   };
 
+
+  // attribute table which show the entity's attrbites and its type 
+
+
   export function Attributes({ attributes }: Props) {
     const data = Object.entries(attributes).map(
       ([attributeName, attributeDetails]) => ({

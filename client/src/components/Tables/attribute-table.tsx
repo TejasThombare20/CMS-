@@ -39,6 +39,7 @@ type Props = {
   attributes: attributes;
 };
 
+
 export function AttributeTable({ attributes }: Props) {
   const data = Object.entries(attributes).map(
     ([attributeName, attributeDetails]) => ({

@@ -31,12 +31,14 @@ type Attribute = {
   type: string;
   allowNull: boolean;
   defaultValue: any;
-  // Add any other properties you have in your data
 };
+
 type Props = {
   tablename: string;
   tableData: Attribute;
 };
+
+// Form to add the row intp the table  this is a dynamic table which handles all fields as table changes
 
 const AddDataForm = ({ tablename, tableData }: Props) => {
   const { setClose } = useModal();
@@ -131,7 +133,6 @@ const AddDataForm = ({ tablename, tableData }: Props) => {
     window.location.reload();
   };
 
-  //   console.log("tableData", tableData);
   return (
     <div>
       <Form {...form}>

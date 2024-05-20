@@ -50,6 +50,10 @@ import { useModal } from "provider/ModalProvider";
 import CustomModal from "components/Custom-modal";
 import UpdateDataForm from "components/Forms/update-data-form";
 
+
+// this function generate the colums according to data present in the selected table 
+
+
 function generateColumns<T extends object>(
   data: T[],
   tablename: string,
@@ -67,28 +71,6 @@ function generateColumns<T extends object>(
 
   const firstRow = data[0];
   const columns: ColumnDef<T>[] = [
-    // {
-    //   id: "select",
-    //   header: ({ table }) => (
-    //     <Checkbox
-    //       checked={
-    //         table.getIsAllPageRowsSelected() ||
-    //         (table.getIsSomePageRowsSelected() && "indeterminate")
-    //       }
-    //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-    //       aria-label="Select all"
-    //     />
-    //   ),
-    //   cell: ({ row }) => (
-    //     <Checkbox
-    //       checked={row.getIsSelected()}
-    //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-    //       aria-label="Select row"
-    //     />
-    //   ),
-    //   enableSorting: false,
-    //   enableHiding: true,
-    // },
     {
       id: "actions",
       enableHiding: false,

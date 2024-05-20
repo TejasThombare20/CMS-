@@ -2,27 +2,12 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 const axiosInstance = axios.create();
 
-// Add a request interceptor
-// axiosInstance.interceptors.request.use(
-//   (config: AxiosRequestConfig) => {
-//     // Do something before the request is sent
-//     // e.g., add authorization headers, set default headers, etc.
-//     return config;
-//   },
-//   (error: AxiosError) => {
-//     // Handle request error
-//     return Promise.reject(error);
-//   }
-// );
-
 // Add a response interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Do something with the response data
     return response;
   },
   (error: AxiosError) => {
-    // Handle response error
     return Promise.reject(error);
   }
 );
@@ -45,7 +30,6 @@ async function fetchURL(
 
   try {
     const response = await axiosInstance(requestConfig);
-
 
     console.log("response", response);
 

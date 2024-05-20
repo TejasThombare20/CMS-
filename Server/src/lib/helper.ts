@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { attributes } from "./types.js";
 
- export function convertToSequelizeFormat(attributes: attributes) {
+export function convertToSequelizeFormat(attributes: attributes) {
   const sequelizeAttributes: attributes = {};
 
   for (const [key, value] of Object.entries(attributes)) {
@@ -30,21 +30,10 @@ import { attributes } from "./types.js";
     }
 
     sequelizeAttributes.id = {
-      type: DataTypes.INTEGER,  
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     };
-    // sequelizeAttributes.createdAt = {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW,
-    // };
-    // sequelizeAttributes.updatedAt = {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW,
-    // };
-  
 
     sequelizeAttributes[key] = {
       type: sequelizeType,

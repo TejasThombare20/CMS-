@@ -1,5 +1,11 @@
 import React from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 import { useModal } from "provider/ModalProvider";
 
 type Props = {
@@ -8,10 +14,9 @@ type Props = {
   children: React.ReactNode;
   defaultOpen?: boolean;
 };
-const CustomModal = ({children, defaultOpen, subheading, title }: Props) => {
+const CustomModal = ({ children, defaultOpen, subheading, title }: Props) => {
+  const { isOpen, setClose } = useModal();
 
-    const { isOpen, setClose } = useModal();
-    
   return (
     <Dialog open={isOpen || defaultOpen} onOpenChange={setClose}>
       <DialogContent className="overflow-scroll md:max-h-[700px] md:h-fit h-screen bg-card ">

@@ -24,6 +24,9 @@ const formSchema1 = z.object({
   datatype: z.string(),
 });
 
+
+
+
 const CreateAttributeForm = (props: Props) => {
   const form1 = useForm<z.infer<typeof formSchema1>>({
     resolver: zodResolver(formSchema1),
@@ -38,6 +41,7 @@ const CreateAttributeForm = (props: Props) => {
   console.log("cardopen", CardOpen);
 
 
+  // optional
 
   const onSubmitAttribute = (values: z.infer<typeof formSchema1>) => {
     console.log(values);
@@ -67,32 +71,6 @@ const CreateAttributeForm = (props: Props) => {
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                control={form1.control}
-                name="datatype"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Attribute</FormLabel>
-                    <FormControl>
-                      <Select>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a attribute" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {data_types.map((data) => (
-                              <SelectItem value={data.name}>
-                                {data.name}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
               <div className="flex items-end justify-end">
                 <Button type="submit">add</Button>
               </div>

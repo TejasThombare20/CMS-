@@ -22,6 +22,8 @@ type Props = {
   tablename: string;
 };
 
+// Form for update the row data
+
 const UpdateDataForm = ({ rowData, tablename }: Props) => {
   const { setClose } = useModal();
   const { toast } = useToast();
