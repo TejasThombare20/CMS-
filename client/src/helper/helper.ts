@@ -2,7 +2,8 @@ import axios from "axios";
 import fetchURL from "./apihandler";
 import { attributes } from "lib/Types";
 
-const baseURL = "http://localhost:5000";
+// const baseURL =  "http://localhost:5000";
+const baseURL = process.env.NODE_ENV === "production" ? "https://cms-1-nh4o.onrender.com" : "http://localhost:5000";
 
 export const createTable = async (
   enitityName: string,
