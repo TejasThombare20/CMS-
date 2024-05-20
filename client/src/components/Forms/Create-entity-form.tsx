@@ -32,7 +32,11 @@ import { createTable } from "helper/helper";
 import { useToast } from "components/ui/use-toast";
 import { useModal } from "provider/ModalProvider";
 
-export function CreateEntityForm() {
+type props = {
+  tablenames: string[];
+};
+
+export function CreateEntityForm({ tablenames }: props) {
   const { toast } = useToast();
   const [CardOpen, setCardOpen] = useState<boolean>(true);
   const [dataTypeValue, setdataTypeValue] = useState("");
@@ -45,9 +49,15 @@ export function CreateEntityForm() {
 
   const formSchema = z
     .object({
-      entityName: z.string().min(2, {
-        message: "Entityname must be at required.",
-      }),
+      entityName: z
+        .string()
+        .min(2, {
+          message: "Entityname must be at required.",
+        })
+        .refine(
+          (entityName) => !tablenames.includes(entityName),
+          "Entity name already exists"
+        ),
       attributes: z.string().optional(),
     })
     .refine(
@@ -122,6 +132,7 @@ export function CreateEntityForm() {
     });
 
     setClose();
+    window.location.reload();
   };
 
   const onSubmitAttribute = (values: z.infer<typeof formSchema1>) => {

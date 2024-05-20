@@ -7,9 +7,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { connection } from "../lib/database.js";
+import { connectToDB } from "../lib/database.js";
 export function InsertData(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        const { connection, sequelize } = yield connectToDB();
         try {
             const body = req.body;
             console.log("body", body);
@@ -27,6 +28,7 @@ export function InsertData(req, res) {
                 }
                 res.send({
                     message: `Data inserted successfully into ${entityName}`,
+                    //@ts-ignore
                     insertId: results.insertId,
                 });
             });
@@ -40,6 +42,7 @@ export function InsertData(req, res) {
 export function getDatafromtable(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const { connection, sequelize } = yield connectToDB();
             const { tablename } = req.params;
             // Ensure tableName is safe to use in a query to prevent SQL injection
             if (!/^[a-zA-Z0-9_]+$/.test(tablename)) {
@@ -63,6 +66,7 @@ export function deletedatafromtable(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { tablename, id } = req.params;
         try {
+            const { connection, sequelize } = yield connectToDB();
             // Construct the DELETE query
             const query = `DELETE FROM ?? WHERE id = ?`;
             // Execute the query
@@ -71,7 +75,8 @@ export function deletedatafromtable(req, res) {
                     console.error("Error executing query:", err);
                     return res.status(500).json({ error: err.message });
                 }
-                if (results.affectedRows === 0) {
+                //@ts-ignore
+                if ((results === null || results === void 0 ? void 0 : results.affectedRows) === 0) {
                     return res.status(404).json({ message: "Row not found" });
                 }
                 res.json({
@@ -88,10 +93,11 @@ export function deletedatafromtable(req, res) {
 export function updateDataInTable(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { tablename, id } = req.params;
-        console.log({ tablename, id });
+        // console.log({ tablename, id });
         const updates = req.body;
-        console.log({ updates });
+        // console.log({ updates });
         try {
+            const { connection, sequelize } = yield connectToDB();
             // Ensure updates is not empty
             if (!updates || Object.keys(updates).length === 0) {
                 return res.status(400).json({ error: "No update fields provided" });
@@ -109,7 +115,8 @@ export function updateDataInTable(req, res) {
                     console.error("Error executing query:", err);
                     return res.status(500).json({ error: err.message });
                 }
-                if (results.affectedRows === 0) {
+                //@ts-ignore
+                if ((results === null || results === void 0 ? void 0 : results.affectedRows) === 0) {
                     return res.status(404).json({ message: "Row not found" });
                 }
                 res.status(200).json({

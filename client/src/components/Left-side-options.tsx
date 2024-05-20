@@ -45,6 +45,7 @@ const LeftSideOptions = ({ defaultOpen }: Props) => {
       try {
         const data = await getTables();
         settablesData(data);
+        console.log(" table names", data);
       } catch (error) {
         console.error("Error fetching tables data:", error);
       }
@@ -52,8 +53,6 @@ const LeftSideOptions = ({ defaultOpen }: Props) => {
 
     fetchData();
   }, []);
-
-  
 
   //   useEffect(() => {
   //     setIsMounted(true);
@@ -91,7 +90,7 @@ const LeftSideOptions = ({ defaultOpen }: Props) => {
             onClick={() => {
               setOpen(
                 <CustomModal title="Create a new Entity" subheading="">
-                  <CreateEntityForm />
+                  <CreateEntityForm tablenames={tablesData} />
                 </CustomModal>
               );
             }}

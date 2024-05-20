@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { connectToDB, connection, sequelize } from "../lib/database.js";
+import { connectToDB } from "../lib/database.js";
 import { Sequelize, json } from "sequelize";
 
 export async function InsertData(req: Request, res: Response) {
+  const { connection, sequelize } = await connectToDB();
   try {
     const body = req.body;
     console.log("body", body);
@@ -24,6 +25,7 @@ export async function InsertData(req: Request, res: Response) {
       }
       res.send({
         message: `Data inserted successfully into ${entityName}`,
+        //@ts-ignore
         insertId: results.insertId,
       });
     });
@@ -35,6 +37,8 @@ export async function InsertData(req: Request, res: Response) {
 
 export async function getDatafromtable(req: Request, res: Response) {
   try {
+    const { connection, sequelize } = await connectToDB();
+
     const { tablename } = req.params;
 
     // Ensure tableName is safe to use in a query to prevent SQL injection
@@ -60,6 +64,7 @@ export async function deletedatafromtable(req: Request, res: Response) {
   const { tablename, id } = req.params;
 
   try {
+    const { connection, sequelize } = await connectToDB();
     // Construct the DELETE query
     const query = `DELETE FROM ?? WHERE id = ?`;
 
@@ -69,8 +74,8 @@ export async function deletedatafromtable(req: Request, res: Response) {
         console.error("Error executing query:", err);
         return res.status(500).json({ error: err.message });
       }
-
-      if (results.affectedRows === 0) {
+      //@ts-ignore
+      if (results?.affectedRows === 0) {
         return res.status(404).json({ message: "Row not found" });
       }
 
@@ -86,12 +91,14 @@ export async function deletedatafromtable(req: Request, res: Response) {
 
 export async function updateDataInTable(req: Request, res: Response) {
   const { tablename, id } = req.params;
-  console.log({ tablename, id });
+  // console.log({ tablename, id });
   const updates = req.body;
-  console.log({ updates})
- 
+  // console.log({ updates });
 
   try {
+
+    const {connection ,sequelize} = await  connectToDB()
+    
     // Ensure updates is not empty
     if (!updates || Object.keys(updates).length === 0) {
       return res.status(400).json({ error: "No update fields provided" });
@@ -113,8 +120,8 @@ export async function updateDataInTable(req: Request, res: Response) {
         console.error("Error executing query:", err);
         return res.status(500).json({ error: err.message });
       }
-
-      if (results.affectedRows === 0) {
+      //@ts-ignore
+      if (results?.affectedRows === 0) {
         return res.status(404).json({ message: "Row not found" });
       }
 

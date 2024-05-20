@@ -7,18 +7,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { connection, sequelize } from "../lib/database.js";
+import { connectToDB } from "../lib/database.js";
 export function createtable(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const entityName = req.body.enitityName;
         const attributes = req.body.attributes;
-        console.log("entityName", entityName);
-        console.log("attributes", attributes);
+        // console.log("entityName", entityName);
+        // console.log("attributes", attributes);
         try {
+            const { connection, sequelize } = yield connectToDB();
             attributes.id = { type: "INT AUTO_INCREMENT PRIMARY KEY", required: true };
             attributes.createdAt = { type: "TIMESTAMP", required: true };
             attributes.updatedAt = { type: "TIMESTAMP", required: true };
-            console.log("hello1");
             // Construct the CREATE TABLE query
             let query = `CREATE TABLE ${entityName} (`;
             const columns = Object.keys(attributes).map((attr) => {
@@ -26,13 +26,11 @@ export function createtable(req, res) {
                 return `${attr} ${type}${required ? " NOT NULL" : ""}`;
             });
             query += columns.join(", ") + ")";
-            console.log("Hello2");
             connection.query(query, (err, results) => {
                 if (err) {
                     console.log("err", err);
                     return res.status(500).send({ error: err.message });
                 }
-                console.log("results", results);
                 // Create triggers for automatic timestamp updates
                 const triggerQuery = `
       CREATE TRIGGER ${entityName}_before_insert
@@ -45,7 +43,6 @@ export function createtable(req, res) {
       FOR EACH ROW
       SET NEW.updatedAt = CURRENT_TIMESTAMP;
     `;
-                console.log("hello3");
                 connection.query(triggerQuery, (triggerErr, triggerResults) => {
                     if (triggerErr) {
                         console.log("triggerErr", triggerErr);
@@ -68,6 +65,7 @@ export function createtable(req, res) {
 export function getAllTables(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const { connection, sequelize } = yield connectToDB();
             const query = "SHOW TABLES";
             // Execute the query using Sequelize
             const [results] = yield sequelize.query(query);
@@ -84,6 +82,7 @@ export function gettTableAttributes(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const tableName = req.params.tableName;
         try {
+            const { connection, sequelize } = yield connectToDB();
             const attributes = yield sequelize
                 .getQueryInterface()
                 .describeTable(tableName);

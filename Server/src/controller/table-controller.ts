@@ -1,22 +1,21 @@
 import { DataTypes } from "sequelize";
-import { connectToDB, connection, sequelize } from "../lib/database.js";
+import { connectToDB } from "../lib/database.js";
 import { Request, Response } from "express";
 import { convertToSequelizeFormat } from "../lib/helper.js";
 
 export async function createtable(req: Request, res: Response) {
-
   const entityName = req.body.enitityName;
   const attributes = req.body.attributes;
 
-  console.log("entityName", entityName);
-  console.log("attributes", attributes);
+  // console.log("entityName", entityName);
+  // console.log("attributes", attributes);
 
   try {
+    const { connection, sequelize } = await connectToDB();
+
     attributes.id = { type: "INT AUTO_INCREMENT PRIMARY KEY", required: true };
     attributes.createdAt = { type: "TIMESTAMP", required: true };
     attributes.updatedAt = { type: "TIMESTAMP", required: true };
-
-    console.log("hello1");
 
     // Construct the CREATE TABLE query
     let query = `CREATE TABLE ${entityName} (`;
@@ -28,15 +27,11 @@ export async function createtable(req: Request, res: Response) {
 
     query += columns.join(", ") + ")";
 
-    console.log("Hello2");
-
     connection.query(query, (err, results) => {
       if (err) {
         console.log("err", err);
         return res.status(500).send({ error: err.message });
       }
-
-      console.log("results", results);
 
       // Create triggers for automatic timestamp updates
       const triggerQuery = `
@@ -50,8 +45,6 @@ export async function createtable(req: Request, res: Response) {
       FOR EACH ROW
       SET NEW.updatedAt = CURRENT_TIMESTAMP;
     `;
-
-      console.log("hello3");
 
       connection.query(triggerQuery, (triggerErr, triggerResults) => {
         if (triggerErr) {
@@ -75,6 +68,8 @@ export async function createtable(req: Request, res: Response) {
 
 export async function getAllTables(req: Request, res: Response) {
   try {
+    const { connection, sequelize } = await connectToDB();
+
     const query = "SHOW TABLES";
 
     // Execute the query using Sequelize
@@ -93,6 +88,8 @@ export async function gettTableAttributes(req: Request, res: Response) {
   const tableName = req.params.tableName;
 
   try {
+    const { connection, sequelize } = await connectToDB();
+
     const attributes = await sequelize
       .getQueryInterface()
       .describeTable(tableName);
